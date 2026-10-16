@@ -1,0 +1,645 @@
+/* ==========================================================================
+   DESCOMPLICANDO OS LOGARITMOS - ANIMAÇÕES E COMPONENTES LÚDICOS
+   Peteleco, Sol e Sombra, Prédio / Mudança de Base
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. A REGRA DO PETELECO (Logaritmo da Potência)
+   -------------------------------------------------------------------------- */
+
+.peteleco-container {
+  background: var(--bg-card);
+  border: 2px dashed var(--brand-primary);
+  border-radius: var(--radius-lg);
+  padding: 2.2rem 1.8rem;
+  margin: 2rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal);
+}
+
+.interactive-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  margin-bottom: 1.2rem;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+}
+
+.peteleco-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+  margin: 1.5rem 0;
+  position: relative;
+  font-family: var(--font-math);
+  user-select: none;
+}
+
+.peteleco-formula-box {
+  display: inline-flex;
+  align-items: baseline;
+  font-size: 2.5rem;
+  font-weight: 700;
+  padding: 1rem 2rem;
+  border-radius: var(--radius-md);
+  background: rgba(79, 70, 229, 0.06);
+  border: 1px solid rgba(79, 70, 229, 0.2);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.peteleco-landing-spot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0px;
+  overflow: visible;
+  transition: width 0.4s ease;
+  color: var(--brand-danger);
+  font-weight: 800;
+}
+
+.peteleco-landing-spot.active {
+  width: 58px;
+}
+
+.peteleco-log-label {
+  color: var(--text-main);
+  letter-spacing: 0.03em;
+}
+
+.peteleco-base {
+  font-size: 1.3rem;
+  color: var(--brand-secondary);
+  position: relative;
+  top: 0.5rem;
+  margin-right: 0.2rem;
+}
+
+.peteleco-arg-group {
+  display: inline-flex;
+  align-items: baseline;
+  position: relative;
+}
+
+.peteleco-arg {
+  color: var(--brand-primary);
+}
+
+.peteleco-exponent {
+  display: inline-block;
+  font-size: 1.5rem;
+  color: #ffffff;
+  background: var(--brand-danger);
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--radius-sm);
+  position: relative;
+  top: -1.2rem;
+  margin-left: 0.15rem;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.peteleco-exponent:hover {
+  transform: scale(1.18) rotate(5deg);
+}
+
+/* Animação do Peteleco em Voo */
+@keyframes petelecoFly {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  25% {
+    transform: translate(-40px, -70px) scale(1.4) rotate(-35deg);
+    box-shadow: 0 10px 25px rgba(239, 68, 68, 0.8);
+    background: #f97316;
+  }
+  60% {
+    transform: translate(-150px, -90px) scale(1.3) rotate(-220deg);
+  }
+  85% {
+    transform: translate(-230px, -20px) scale(1.15) rotate(-360deg);
+  }
+  100% {
+    transform: translate(-275px, 0px) scale(1) rotate(-360deg);
+    opacity: 0;
+  }
+}
+
+.peteleco-exponent.flying {
+  animation: petelecoFly 0.85s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  pointer-events: none;
+}
+
+/* Mãozinha do Peteleco */
+.flick-hand {
+  position: absolute;
+  font-size: 2.8rem;
+  right: 22%;
+  top: -5px;
+  transform: rotate(-15deg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 20;
+}
+
+@keyframes handStrike {
+  0% {
+    opacity: 1;
+    transform: translate(30px, -15px) rotate(10deg);
+  }
+  50% {
+    transform: translate(-10px, 10px) rotate(-35deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-30px, 20px) rotate(-50deg);
+  }
+}
+
+.flick-hand.striking {
+  animation: handStrike 0.4s ease-out forwards;
+}
+
+/* Controles e Inputs da Regra do Peteleco */
+.tool-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn-action-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: linear-gradient(135deg, var(--brand-primary), var(--brand-purple));
+  color: #fff;
+  border: none;
+  padding: 0.85rem 1.6rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+  transition: all var(--transition-fast);
+}
+
+.btn-action-primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.55);
+}
+
+.btn-action-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-action-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-primary);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  padding: 0.75rem 1.3rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-action-secondary:hover {
+  border-color: var(--brand-primary);
+  background: var(--brand-primary-light);
+}
+
+.tool-inputs-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.custom-number-input {
+  width: 54px;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-main);
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  text-align: center;
+  font-size: 1rem;
+}
+
+
+/* --------------------------------------------------------------------------
+   2. A REGRA DO SOL E DA SOMBRA (Radiciação para Potência Fracionária)
+   -------------------------------------------------------------------------- */
+
+.sun-shadow-container {
+  background: var(--bg-card);
+  border: 2px solid rgba(245, 158, 11, 0.4);
+  border-radius: var(--radius-lg);
+  padding: 2.2rem 1.8rem;
+  margin: 2rem 0;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.sun-shadow-stage {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+/* Casinha do Radical */
+.radical-house {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background: rgba(245, 158, 11, 0.05);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.sun-entity {
+  position: absolute;
+  top: -32px;
+  left: 20px;
+  font-size: 2.4rem;
+  animation: sunPulse 3s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 12px rgba(245, 158, 11, 0.7));
+}
+
+@keyframes sunPulse {
+  0% { transform: scale(1) rotate(0deg); }
+  100% { transform: scale(1.12) rotate(25deg); }
+}
+
+.radical-symbol-wrap {
+  display: flex;
+  align-items: flex-end;
+  font-family: var(--font-math);
+  position: relative;
+}
+
+.tag-sol {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fef3c7;
+  color: #b45309;
+  border: 2px solid #f59e0b;
+  border-radius: var(--radius-sm);
+  padding: 0.2rem 0.6rem;
+  font-weight: 800;
+  font-size: 1.4rem;
+  position: relative;
+  top: -2.2rem;
+  margin-right: 0.3rem;
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+  transition: all 0.4s ease;
+}
+
+body.dark-mode .tag-sol {
+  background: #78350f;
+  color: #fef3c7;
+}
+
+.radical-roof-symbol {
+  font-size: 4rem;
+  line-height: 1;
+  color: #f59e0b;
+  margin-right: 0.2rem;
+}
+
+.roof-cover {
+  position: absolute;
+  top: 10px;
+  left: 36px;
+  right: -8px;
+  height: 5px;
+  background: #f59e0b;
+  border-radius: 4px;
+}
+
+.radicando-content {
+  display: inline-flex;
+  align-items: baseline;
+  padding: 0.4rem 0.8rem 0.2rem;
+  position: relative;
+}
+
+.base-letter {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.tag-sombra {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  background: #e0e7ff;
+  color: #3730a3;
+  border: 2px solid #6366f1;
+  border-radius: var(--radius-sm);
+  padding: 0.15rem 0.5rem;
+  font-weight: 800;
+  font-size: 1.3rem;
+  position: relative;
+  top: -1.3rem;
+  margin-left: 0.2rem;
+  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+  transition: all 0.4s ease;
+}
+
+body.dark-mode .tag-sombra {
+  background: #312e81;
+  color: #e0e7ff;
+}
+
+/* Seta de Transformação */
+.transform-arrow-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.arrow-icon {
+  font-size: 2.2rem;
+  color: var(--brand-primary);
+  animation: arrowBounce 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes arrowBounce {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(8px); }
+}
+
+/* Resultado da Potência Fracionária */
+.fraction-power-result {
+  display: inline-flex;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background: rgba(99, 102, 241, 0.05);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: var(--radius-md);
+  font-family: var(--font-math);
+  position: relative;
+}
+
+.fraction-exponent-box {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  top: -1.4rem;
+  margin-left: 0.35rem;
+}
+
+.fraction-line {
+  width: 100%;
+  height: 3px;
+  background: var(--text-main);
+  margin: 2px 0;
+  border-radius: 2px;
+}
+
+/* Efeito Didático de Explicação */
+.mnemonic-quote {
+  text-align: center;
+  font-style: italic;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--brand-primary);
+  margin-top: 1rem;
+}
+
+.mnemonic-subquote {
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+
+/* --------------------------------------------------------------------------
+   3. A REGRA DO PRÉDIO (Mudança de Base)
+   -------------------------------------------------------------------------- */
+
+.building-rule-container {
+  background: var(--bg-card);
+  border: 2px solid rgba(6, 182, 212, 0.4);
+  border-radius: var(--radius-lg);
+  padding: 2.2rem 1.8rem;
+  margin: 2rem 0;
+  box-shadow: var(--shadow-md);
+}
+
+.building-stage {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 3rem;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+/* O Prédio Ilustrado */
+.building-visual {
+  width: 280px;
+  background: linear-gradient(180deg, #1e293b, #0f172a);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  border: 3px solid #334155;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.building-roof-antenna {
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  background: #334155;
+}
+
+.antenna-stick {
+  width: 4px;
+  height: 20px;
+  background: #ef4444;
+  border-radius: 2px;
+  box-shadow: 0 0 6px #ef4444;
+}
+
+/* Andar Cobertura (Top Floor = Numerador) */
+.floor-penthouse {
+  padding: 1.2rem 1rem;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(6, 182, 212, 0.2));
+  border-bottom: 2px dashed #06b6d4;
+  text-align: center;
+  position: relative;
+}
+
+.floor-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #38bdf8;
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.penthouse-value {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #ffffff;
+  font-family: var(--font-math);
+  transition: all 0.5s ease;
+}
+
+/* Andar Subsolo / Garagem (Ground Floor = Denominador) */
+.floor-basement {
+  padding: 1.2rem 1rem;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(15, 23, 42, 0.9));
+  text-align: center;
+  margin-top: auto;
+  position: relative;
+}
+
+.floor-basement .floor-label {
+  color: #f87171;
+}
+
+.basement-value {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #ffffff;
+  font-family: var(--font-math);
+  transition: all 0.5s ease;
+}
+
+/* Eixo do Elevador Central */
+.elevator-shaft {
+  background: rgba(0, 0, 0, 0.4);
+  margin: 0.8rem 1.5rem;
+  border-radius: var(--radius-sm);
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.elevator-cabin {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: white;
+  position: absolute;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.6);
+  transition: top 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.elevator-cabin.up {
+  top: 10px;
+}
+
+.elevator-cabin.down {
+  top: calc(100% - 54px);
+}
+
+.elevator-cabin.middle {
+  top: calc(50% - 22px);
+}
+
+/* Painel Explicativo da Fração */
+.building-formula-display {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.formula-fraction-result {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--font-math);
+  font-size: 2rem;
+  background: rgba(6, 182, 212, 0.05);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  padding: 1.5rem 2.2rem;
+  border-radius: var(--radius-md);
+}
+
+.fraction-numerator {
+  color: #10b981;
+  font-weight: 700;
+  padding-bottom: 0.25rem;
+}
+
+.fraction-bar-main {
+  width: 100%;
+  height: 4px;
+  background: var(--brand-primary);
+  border-radius: 2px;
+}
+
+.fraction-denominator {
+  color: #ef4444;
+  font-weight: 700;
+  padding-top: 0.25rem;
+}
+
+/* ==========================================================================
+   ANIMAÇÕES DE DESTAQUE E PULSO
+   ========================================================================== */
+
+@keyframes highlightGlow {
+  0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.6); }
+  70% { box-shadow: 0 0 0 14px rgba(79, 70, 229, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+}
+
+.pulse-highlight {
+  animation: highlightGlow 1.8s infinite;
+}
