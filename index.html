@@ -1,119 +1,88 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Descomplicando os Logaritmos | Livro-Site Interativo</title>
-
-    <!-- Fontes do Google -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- KaTeX para Fórmulas Matemáticas -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-
-    <!-- Ficheiros de Estilo CSS -->
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/components.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Descomplicando os Logaritmos - Livro-Site Interativo</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
-
-    <!-- Barra de Progresso de Leitura Superior -->
-    <div class="reading-progress-bar" id="readingProgressBar"></div>
-
-    <!-- Overlay para Telas Menores -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <div id="app-container">
-        <!-- Sidebar / Menu Lateral -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="logo-icon">log</div>
-                <div class="logo-text">
-                    <h2>Descomplicando</h2>
-                    <span>os Logaritmos • EM / PROFMAT</span>
-                </div>
-            </div>
-
-            <div class="progress-section">
-                <div class="progress-label">
-                    <span>Progresso do Livro</span>
-                    <span id="userProgressPct">0% Concluído</span>
-                </div>
-                <div class="progress-track">
-                    <div class="progress-fill" id="userProgressFill"></div>
-                </div>
-            </div>
-
-            <nav class="sidebar-nav">
-                <div class="nav-group">
-                    <div class="nav-group-title">Sumário do Livro</div>
-                    <a href="#welcome" class="nav-link active" data-nav-chapter="welcome">
-                        <span class="icon">📖</span> Apresentação & Boas-vindas
-                    </a>
-                </div>
-
-                <div class="nav-group">
-                    <div class="nav-group-title">Capítulos Didáticos</div>
-                    <a href="#cap1" class="nav-link" data-nav-chapter="cap1">
-                        <span class="icon">📐</span> Cap. 1: Alicerce e Definições
-                    </a>
-                    <a href="#cap2" class="nav-link" data-nav-chapter="cap2">
-                        <span class="icon">📈</span> Cap. 2: Funções & Cotidiano
-                    </a>
-                    <a href="#cap3" class="nav-link" data-nav-chapter="cap3">
-                        <span class="icon">⚖️</span> Cap. 3: Equações & Inequações
-                    </a>
-                </div>
-
-                <div class="nav-group">
-                    <div class="nav-group-title">Gamificação & Desafios</div>
-                    <a href="#games" class="nav-link" data-nav-chapter="games">
-                        <span class="icon">🎮</span> Modo Game & Quizzes Wordwall
-                    </a>
-                </div>
-            </nav>
-
-            <div class="sidebar-footer">
-                <small>Matemática Ensino Médio v2.0 • 2026</small>
-            </div>
-        </aside>
-
-        <!-- Conteúdo Principal -->
-        <div class="main-wrapper">
-            <header class="top-header">
-                <button class="menu-toggle" id="btnSidebarToggle" aria-label="Abrir Menu">
-                    ☰
-                </button>
-                <div class="breadcrumb" id="breadcrumb">
-                    Livro-Site / <span id="activeBreadcrumb">Introdução</span>
-                </div>
-                <div class="header-actions">
-                    <button class="btn-icon" id="btnSoundToggle" title="Ativar/Desativar Sons">🔊</button>
-                    <button class="btn-icon" id="btnThemeToggle" title="Alternar Modo Escuro">☀️</button>
-                </div>
-            </header>
-
-            <!-- Contêiner Dinâmico das Páginas -->
-            <main class="content-area" id="contentContainer">
-                <!-- Injetado dinamicamente via JavaScript -->
-            </main>
+  <div id="reading-progress-bar" class="reading-progress-bar"></div>
+  <div id="app-container">
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <a href="#cover" class="brand-badge">
+          <div class="brand-icon">log</div>
+          <div class="brand-text">
+            <h1>Logaritmos</h1>
+            <span>Produto Educacional</span>
+          </div>
+        </a>
+      </div>
+      <div class="user-progress-card">
+        <div class="user-progress-info">
+          <span>Seu Progresso</span>
+          <span id="user-progress-percent">0%</span>
         </div>
+        <div class="user-progress-bar-bg">
+          <div id="user-progress-bar-fill" class="user-progress-bar-fill"></div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-group-title">Início & Estrutura</div>
+        <a href="#cover" class="nav-item active" data-nav-chapter="cover"><span class="nav-item-icon"></span> Capa do Produto</a>
+        <a href="#techspec" class="nav-item" data-nav-chapter="techspec"><span class="nav-item-icon"></span> Descrição Técnica</a>
+        <a href="#sumario" class="nav-item" data-nav-chapter="sumario"><span class="nav-item-icon"></span> Sumário</a>
+        <a href="#welcome" class="nav-item" data-nav-chapter="welcome"><span class="nav-item-icon"></span> Apresentação</a>
+        <div class="nav-group-title">Capítulos Didáticos</div>
+        <a href="#cap1" class="nav-item" data-nav-chapter="cap1"><span class="nav-item-icon"></span> Cap. 1: Alicerce & Regras</a>
+        <a href="#cap2" class="nav-item" data-nav-chapter="cap2"><span class="nav-item-icon"></span> Cap. 2: Funções & Aplicações</a>
+        <a href="#cap3" class="nav-item" data-nav-chapter="cap3"><span class="nav-item-icon"></span> Cap. 3: Equações & Inequações</a>
+        <div class="nav-group-title">Gamificação & Desafios</div>
+        <a href="#games" class="nav-item" data-nav-chapter="games"><span class="nav-item-icon"></span> Modo Game & Wordwall</a>
+      </nav>
+      <div class="sidebar-footer">
+        <span>© 2026 PROFMAT / Vercel</span><span>v2.4</span>
+      </div>
+    </aside>
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div class="header-left">
+          <button id="btn-sidebar-toggle" class="btn-sidebar-toggle"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+          <div class="current-breadcrumb"><span>Módulo:</span><span id="breadcrumb-current-title" class="active-crumb">Capa do Produto</span></div>
+        </div>
+        <div class="header-actions">
+          <button id="theme-toggle-btn" class="btn-icon"><span id="theme-icon">🌙</span></button>
+        </div>
+      </header>
+      <main id="main-content-area" class="content-area">
+        <div class="chapter-hero">
+          <span id="chapter-tag" class="chapter-tag">Carregando...</span>
+          <h2 id="chapter-title" class="chapter-title">Carregando conteúdo...</h2>
+          <p id="chapter-subtitle" class="chapter-subtitle"></p>
+        </div>
+        <div id="chapter-dynamic-body"></div>
+        <div class="chapter-navigation-footer">
+          <button id="btn-prev-chapter" class="nav-page-btn" disabled>← Capítulo Anterior</button>
+          <button id="btn-next-chapter" class="nav-page-btn">Próximo Capítulo →</button>
+        </div>
+      </main>
     </div>
+  </div>
 
-    <!-- Ficheiros de Script JavaScript (Carregados na Ordem Correta) -->
-    <script src="js/sound.js"></script>
-    <script src="js/content-data.js"></script>
-    <script src="js/interactive-tools.js"></script>
-    <script src="js/chart-simulator.js"></script>
-    <script src="js/real-world-sims.js"></script>
-    <script src="js/quiz-engine.js"></script>
-    <script src="js/app.js"></script>
-
+  <!-- SCRIPTS DE SUPORTE (INCLUINDO OS GRÁFICOS E SIMULADORES) -->
+  <script src="js/content-data.js"></script>
+  <script src="js/interactive-tools.js"></script>
+  <script src="js/chart-simulator.js"></script>
+  <script src="js/real-world-sims.js"></script>
+  <script src="js/quiz-engine.js"></script>
+  <script src="js/sound.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

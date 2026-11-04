@@ -1,6 +1,5 @@
 /**
- * DESCOMPLICANDO OS LOGARITMOS - MECÂNICA DO QUIZ NATIVO & QR CODES WORDWALL
- * Gamificação interativa com pontuação, feedback sonoro e medalhas.
+ * DESCOMPLICANDO OS LOGARITMOS - MECÂNICA DO QUIZ E GERAÇÃO DE QR CODES
  */
 
 class QuizEngine {
@@ -31,15 +30,14 @@ class QuizEngine {
         <div class="quiz-header">
           <div>
             <span class="interactive-badge" style="background: linear-gradient(135deg, #8b5cf6, #6366f1);">
-              🏆 Quiz Rápido
+              Avaliação Formativa
             </span>
             <div style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.3rem;">
               Questão ${this.currentIndex + 1} de ${this.questions.length}
             </div>
           </div>
           <div class="quiz-score-badge">
-            <span>Pontos: ${this.score}</span>
-            ${this.streak > 1 ? `<span>🔥 x${this.streak}</span>` : ''}
+            <span>Pontuação: ${this.score}</span>
           </div>
         </div>
 
@@ -47,7 +45,7 @@ class QuizEngine {
           ${q.question}
         </div>
 
-        <div class="quiz-options-list" id="quizOptionsContainer">
+        <div class="quiz-options-list">
           ${q.options.map((opt, idx) => `
             <button class="quiz-option-btn" data-index="${idx}">
               <div class="quiz-option-letter">${letters[idx]}</div>
@@ -60,13 +58,12 @@ class QuizEngine {
           <div id="quizFeedbackTitle" style="font-weight: 800; font-size: 1.1rem; margin-bottom: 0.4rem;"></div>
           <div id="quizFeedbackMsg" style="font-size: 0.95rem;"></div>
           <button class="btn-action-primary" id="btnNextQuestion" style="margin-top: 1rem;">
-            <span>Próxima Questão</span> ➔
+            <span>Avançar Questão</span>
           </button>
         </div>
       </div>
     `;
 
-    // Renderizar KaTeX na pergunta e opções se disponível
     if (window.renderMathInElement) {
       window.renderMathInElement(this.container, {
         delimiters: [
@@ -97,28 +94,17 @@ class QuizEngine {
 
         buttons.forEach((b, idx) => {
           b.disabled = true;
-          if (idx === q.correctIndex) {
-            b.classList.add('correct');
-          } else if (idx === chosenIdx) {
-            b.classList.add('wrong');
-          }
+          if (idx === q.correctIndex) b.classList.add('correct');
+          else if (idx === chosenIdx) b.classList.add('wrong');
         });
 
         if (isCorrect) {
-          this.score += 100 + (this.streak * 20);
-          this.streak++;
-          if (window.soundSystem) window.soundSystem.playCorrectSound();
-          feedbackBox.style.background = 'rgba(16, 185, 129, 0.12)';
-          feedbackBox.style.border = '1px solid var(--brand-success)';
+          this.score += 100;
           feedbackTitle.style.color = 'var(--brand-success)';
-          feedbackTitle.textContent = '🎉 Resposta Exata!';
+          feedbackTitle.textContent = 'Resposta Correta';
         } else {
-          this.streak = 0;
-          if (window.soundSystem) window.soundSystem.playWrongSound();
-          feedbackBox.style.background = 'rgba(239, 68, 68, 0.12)';
-          feedbackBox.style.border = '1px solid var(--brand-danger)';
           feedbackTitle.style.color = 'var(--brand-danger)';
-          feedbackTitle.textContent = '❌ Quase lá!';
+          feedbackTitle.textContent = 'Resposta Incorreta';
         }
 
         feedbackMsg.innerHTML = q.explanation;
@@ -136,7 +122,6 @@ class QuizEngine {
     });
 
     nextBtn.addEventListener('click', () => {
-      if (window.soundSystem) window.soundSystem.playClickSound();
       this.currentIndex++;
       this.hasAnswered = false;
       this.render();
@@ -144,34 +129,19 @@ class QuizEngine {
   }
 
   renderVictory() {
-    let rank = "Aprendiz dos Logaritmos 🥉";
-    let message = "Bom começo! Revise os capítulos anteriores e tente novamente para conquistar a pontuação máxima.";
-
-    if (this.score >= 500) {
-      rank = "Mestre Supremo dos Logaritmos 🏆🥇";
-      message = "Incrível! Você dominou o alicerce, o peteleco, as funções e o sentido das inequações com maestria!";
-    } else if (this.score >= 300) {
-      rank = "Desbravador da Base Dez 🥈";
-      message = "Muito bem! Você tem ótimo domínio dos conceitos fundamentais.";
-    }
-
     this.container.innerHTML = `
       <div class="quiz-widget-card" style="text-align: center; padding: 3rem 2rem;">
-        <div style="font-size: 4rem; margin-bottom: 0.5rem;">🎉</div>
-        <h3 style="font-size: 2rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem;">
-          Desafio Concluído!
+        <h3 style="font-size: 1.8rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem;">
+          Módulo Concluído com Sucesso
         </h3>
-        <div style="font-size: 1.25rem; font-weight: 700; color: var(--brand-purple); margin-bottom: 1rem;">
-          ${rank}
-        </div>
-        <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 1.5rem;">
-          ${message}
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+          Você finalizou a avaliação formativa deste módulo.
         </p>
         <div class="sim-big-number" style="color: var(--brand-success); margin-bottom: 2rem;">
           ${this.score} Pontos
         </div>
         <button class="btn-action-primary" id="btnRestartQuiz" style="margin: 0 auto;">
-          <span>Refazer o Quiz</span> 🔄
+          <span>Reiniciar Avaliação</span>
         </button>
       </div>
     `;
@@ -179,79 +149,37 @@ class QuizEngine {
     this.container.querySelector('#btnRestartQuiz').addEventListener('click', () => {
       this.currentIndex = 0;
       this.score = 0;
-      this.streak = 0;
       this.hasAnswered = false;
       this.render();
     });
   }
 
-  // Renderiza QR Codes vetoriais elegantes para os cards do Wordwall
+  // Gera os QR Codes reais utilizando a biblioteca qrcode.js incluída no index.html
   static renderWordwallQRCodes() {
-    const urls = [
-      { id: 'qr-wordwall-1', url: 'https://wordwall.net/pt/community?localeId=1046&query=logaritmos' },
-      { id: 'qr-wordwall-2', url: 'https://wordwall.net/pt/community?localeId=1046&query=funcao+logaritmica' },
-      { id: 'qr-wordwall-3', url: 'https://wordwall.net/pt/community?localeId=1046&query=escala+richter+logaritmo' }
+    const items = [
+      { id: 'qr-wordwall-1', url: 'https://wordwall.net/pt/resource/exemplo-jogo-peteleco-logaritmos' },
+      { id: 'qr-wordwall-2', url: 'https://wordwall.net/pt/resource/exemplo-roleta-bases-log' },
+      { id: 'qr-wordwall-3', url: 'https://wordwall.net/pt/resource/exemplo-labirinto-aplicacoes-log' }
     ];
 
-    urls.forEach(item => {
+    items.forEach(item => {
       const el = document.getElementById(item.id);
       if (!el) return;
-
-      // Gerador de SVG de alta fidelidade visual simulando o padrão de QR Code
-      el.innerHTML = `
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <!-- Molduras dos cantos (Position Detection Patterns) -->
-          <rect x="5" y="5" width="26" height="26" fill="#0f172a" rx="3" />
-          <rect x="9" y="9" width="18" height="18" fill="#ffffff" rx="2" />
-          <rect x="13" y="13" width="10" height="10" fill="#0284c7" rx="1" />
-
-          <rect x="69" y="5" width="26" height="26" fill="#0f172a" rx="3" />
-          <rect x="73" y="9" width="18" height="18" fill="#ffffff" rx="2" />
-          <rect x="77" y="13" width="10" height="10" fill="#0284c7" rx="1" />
-
-          <rect x="5" y="69" width="26" height="26" fill="#0f172a" rx="3" />
-          <rect x="9" y="73" width="18" height="18" fill="#ffffff" rx="2" />
-          <rect x="13" y="77" width="10" height="10" fill="#0284c7" rx="1" />
-
-          <!-- Padrão Matricial Interno -->
-          <rect x="36" y="8" width="5" height="5" fill="#0f172a" />
-          <rect x="46" y="8" width="5" height="5" fill="#0284c7" />
-          <rect x="56" y="8" width="5" height="5" fill="#0f172a" />
-
-          <rect x="36" y="18" width="5" height="5" fill="#0284c7" />
-          <rect x="46" y="18" width="8" height="5" fill="#0f172a" />
-          <rect x="58" y="18" width="5" height="5" fill="#0284c7" />
-
-          <rect x="8" y="36" width="5" height="5" fill="#0f172a" />
-          <rect x="18" y="36" width="5" height="5" fill="#0284c7" />
-          <rect x="8" y="46" width="5" height="5" fill="#0284c7" />
-          <rect x="18" y="46" width="5" height="5" fill="#0f172a" />
-
-          <rect x="36" y="36" width="8" height="8" fill="#0f172a" rx="1" />
-          <rect x="48" y="36" width="6" height="6" fill="#0284c7" />
-          <rect x="58" y="36" width="8" height="8" fill="#0f172a" />
-          <rect x="70" y="36" width="6" height="6" fill="#0284c7" />
-          <rect x="82" y="36" width="8" height="8" fill="#0f172a" />
-
-          <rect x="36" y="48" width="6" height="6" fill="#0284c7" />
-          <rect x="46" y="48" width="10" height="10" fill="#0f172a" />
-          <rect x="60" y="48" width="6" height="6" fill="#0284c7" />
-          <rect x="72" y="48" width="8" height="8" fill="#0f172a" />
-
-          <rect x="36" y="62" width="10" height="6" fill="#0f172a" />
-          <rect x="50" y="62" width="6" height="6" fill="#0284c7" />
-          <rect x="62" y="62" width="8" height="8" fill="#0f172a" />
-
-          <rect x="36" y="74" width="6" height="6" fill="#0284c7" />
-          <rect x="48" y="74" width="8" height="8" fill="#0f172a" />
-          <rect x="60" y="74" width="6" height="6" fill="#0284c7" />
-          <rect x="72" y="74" width="12" height="12" fill="#0f172a" rx="1" />
-
-          <rect x="36" y="86" width="8" height="8" fill="#0f172a" />
-          <rect x="48" y="86" width="6" height="6" fill="#0284c7" />
-          <rect x="58" y="86" width="8" height="8" fill="#0f172a" />
-        </svg>
-      `;
+      el.innerHTML = ''; // Limpa conteúdo anterior
+      
+      // Utiliza a biblioteca QRCode global do CDN
+      if (typeof QRCode !== 'undefined') {
+        new QRCode(el, {
+          text: item.url,
+          width: 120,
+          height: 120,
+          colorDark: "#0f172a",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      } else {
+        el.textContent = 'Erro ao carregar gerador de QR Code';
+      }
     });
   }
 }
