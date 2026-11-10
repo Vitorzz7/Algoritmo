@@ -4,9 +4,9 @@
 
 class LogarithmBookApp {
   constructor() {
-    this.chaptersList = ['cover', 'techspec', 'sumario', 'welcome', 'cap1', 'cap2', 'cap3', 'games'];
+    this.chaptersList = ['cover', 'techspec', 'sumario', 'welcome', 'cap1', 'cap2', 'cap3', 'cap4', 'cap5', 'games'];
     this.currentChapterIndex = 0;
-    this.exerciseIndexes = { cap1: 0, cap2: 0, cap3: 0 };
+    this.exerciseIndexes = { cap1: 0, cap2: 0, cap3: 0, cap4: 0, cap5: 0 };
     this.init();
   }
 
@@ -75,14 +75,20 @@ class LogarithmBookApp {
       if (window.InteractiveTools) {
         window.InteractiveTools.initPeteleco('peteleco-interactive-mount');
         window.InteractiveTools.initSunShadow('sun-shadow-interactive-mount');
-        window.InteractiveTools.initBuildingRule('building-rule-interactive-mount');
       }
       this.renderSingleExercise('exercises-cap1-mount', 'cap1', window.EXERCISES_DATA ? window.EXERCISES_DATA.cap1 : []);
     } else if (chapterId === 'cap2') {
-      if (window.ChartSimulator) window.ChartSimulator.mountSimulator('chart-simulator-mount');
-      if (window.RealWorldSims) window.RealWorldSims.mountSimulators('real-world-simulators-mount');
       this.renderSingleExercise('exercises-cap2-mount', 'cap2', window.EXERCISES_DATA ? window.EXERCISES_DATA.cap2 : []);
     } else if (chapterId === 'cap3') {
+      if (window.InteractiveTools) {
+        window.InteractiveTools.initBuildingRule('building-rule-interactive-mount');
+      }
+      this.renderSingleExercise('exercises-cap3-mount', 'cap3', window.EXERCISES_DATA ? window.EXERCISES_DATA.cap3 : []);
+    } else if (chapterId === 'cap4') {
+      if (window.ChartSimulator) window.ChartSimulator.mountSimulator('chart-simulator-mount');
+      if (window.RealWorldSims) window.RealWorldSims.mountSimulators('real-world-simulators-mount');
+      this.renderSingleExercise('exercises-cap4-mount', 'cap4', window.EXERCISES_DATA ? window.EXERCISES_DATA.cap4 : []);
+    } else if (chapterId === 'cap5') {
       const btnTest = document.getElementById('btnTestIneq');
       const inputBase = document.getElementById('inputCustomBase');
       const titleEl = document.getElementById('ineqCustomTitle');
@@ -104,10 +110,9 @@ class LogarithmBookApp {
           this.renderMath();
         });
       }
-      this.renderSingleExercise('exercises-cap3-mount', 'cap3', window.EXERCISES_DATA ? window.EXERCISES_DATA.cap3 : []);
+      this.renderSingleExercise('exercises-cap5-mount', 'cap5', window.EXERCISES_DATA ? window.EXERCISES_DATA.cap5 : []);
     } else if (chapterId === 'games') {
       if (window.QuizEngine) {
-        new QuizEngine('native-quiz-mount');
         QuizEngine.renderWordwallQRCodes();
       }
     }
@@ -158,7 +163,6 @@ class LogarithmBookApp {
           <span class="toggle-icon">▼</span>
         </button>
 
-        <!-- Forçamos o painel escondido por defeito com display: none e sem restrições de altura -->
         <div class="accordion-content" id="content-${ex.id}" style="display: none; margin-top: 1rem; padding: 1.2rem; background: var(--bg-main); border-radius: var(--radius-sm); border: 1px solid var(--border-color); color: var(--text-main); max-height: none !important; opacity: 1 !important; visibility: visible !important;">
           <div class="step-by-step-box">
             ${ex.steps.map(step => `
@@ -228,8 +232,6 @@ class LogarithmBookApp {
     
     accordionBtn.addEventListener('click', () => {
       const isVisible = accordionContent.style.display === 'block';
-      
-      // Alternamos o display de forma forçada
       accordionContent.style.display = isVisible ? 'none' : 'block';
       accordionBtn.querySelector('.toggle-icon').textContent = isVisible ? '▼' : '▲';
       
